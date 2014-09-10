@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 int main(void)
 {
@@ -13,6 +12,7 @@ int main(void)
 
     fp = fopen("testInts.txt", "w");
 
+    fprintf(fp,"Integers printen door Patrick\n");
 	for (i = low; i<=high;i++)
 	{
 		getallenReeks[j] = i;
