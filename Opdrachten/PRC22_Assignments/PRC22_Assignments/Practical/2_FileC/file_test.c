@@ -460,8 +460,8 @@ int main (int argc, char * argv[])
     UnityBegin();
 
     MY_RUN_TEST(test_ReadElementParameters);
-    //MY_RUN_TEST(test_ReadElementEmptyFile);
-    //MY_RUN_TEST(test_ReadElementValidFile);
+    MY_RUN_TEST(test_ReadElementEmptyFile);
+    MY_RUN_TEST(test_ReadElementValidFile);
     //MY_RUN_TEST(test_ReadElementInvalidFile1);
     //MY_RUN_TEST(test_ReadElementInvalidFile2);
 
