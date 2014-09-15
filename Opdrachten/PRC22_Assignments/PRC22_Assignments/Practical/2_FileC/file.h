@@ -12,7 +12,7 @@ typedef struct
 } STUDENT;
 
 extern int ReadElement(FILE* FilePtr, int ElementNr, STUDENT* StudentPtr);
-/* pre    : 
+/* pre    :
  * post   : If file contains enough elements, element 'ElementNr' is read into StudentPtr
  * returns: On succes: 1 (1 element was read)
  *          If element does not exist: 0
@@ -20,7 +20,7 @@ extern int ReadElement(FILE* FilePtr, int ElementNr, STUDENT* StudentPtr);
  */
 
 extern int WriteElement(FILE* FilePtr, int ElementNr, const STUDENT* StudentPtr);
-/* pre    : 
+/* pre    :
  * post   : Element 'ElementNr' is written into file with data from StudentPtr
  * returns: On succes: 0
  *          In case of an error (file could not be written, input pointers are NULL): -1
@@ -33,19 +33,19 @@ extern int ComputeAverageStudyResults (char* FileName, double* Average);
  */
 
 extern int LinearSearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr);
-/* pre    : 
+/* pre    :
  * post   : Returns student information of student with student number Number
  * returns: -1 if Number is not available or in case of an error, 0 if Number is available
  */
 
 extern int BinarySearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr);
-/* pre    : 
+/* pre    :
  * post   : Returns student information of student with student number Number
  * returns: -1 if Number is not available or in case of an error, 0 if Number is available
  */
 
 extern int AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr);
-/* pre    : 
+/* pre    :
  * post   : Adds information from StudentPtr to FileName in a sorted way,
  *          if FileName does not exist, a new file is created.
  * returns: -1 in case of an error
@@ -54,10 +54,10 @@ extern int AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr);
  */
 
 extern int RemoveStudentFromFile (char* FileName, int StudentNumber);
-/* pre    : 
+/* pre    :
  * post   : Removes student with StudentNumber from file
  * returns: 0 if StudentNumber was removed from file
  *          -1 if StudentNumber was not found or an error occurs
  */
-
+extern void sort();
 #endif
