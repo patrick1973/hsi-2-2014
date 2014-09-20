@@ -21,7 +21,6 @@ int ReadElement(FILE* FilePtr, int ElementNr, STUDENT* StudentPtr)
 	if (FilePtr != NULL && StudentPtr != NULL)
 	{
 		//door loop het bestand. fseek berekend iedere keer de nieuwe posite vanaf start.
-		
 		fseek(FilePtr,(ElementNr*sizeof(STUDENT)),SEEK_SET);
 		if (fread(StudentPtr,sizeof(STUDENT),1,FilePtr)!=0) // lees elke keer 1 record in. indien fread 0 retourneerd is er geen data meer.
 		{
@@ -132,11 +131,8 @@ LinearSearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr)
     {
         Result = -1; // error tijdens het openen
     }
-	
-	if (fp != NULL)
-	{
+
 	fclose(fp);
-	}
 	return Result;
 }
 
