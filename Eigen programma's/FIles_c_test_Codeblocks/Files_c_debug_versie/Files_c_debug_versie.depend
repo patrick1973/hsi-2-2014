@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1411198194 source:c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\files_c_test_codeblocks\files_c_debug_versie\file.c
+	<stdbool.h>
+	<stdlib.h>
+	<string.h>
+	"file.h"
+	"resource_detector.h"
+
+1410814317 c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\files_c_test_codeblocks\files_c_debug_versie\file.h
+	<stdbool.h>
+	<stdio.h>
+
+1410012452 c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\files_c_test_codeblocks\files_c_debug_versie\resource_detector.h
+
+1410012452 source:c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\files_c_test_codeblocks\files_c_debug_versie\file_main.c
+	<stdlib.h>
+	<stdio.h>
+	"resource_detector.h"
+	"file.h"
+
