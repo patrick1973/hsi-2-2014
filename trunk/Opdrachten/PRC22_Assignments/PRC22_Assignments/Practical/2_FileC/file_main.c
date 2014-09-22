@@ -13,7 +13,7 @@
 
 static bool WithMenu = true;
 
-static void 
+static void
 PrintStudentsFile (void)
 /* pre :
  * post: alle gegevens van alle studenten in de file zijn afgedrukt.
@@ -41,7 +41,7 @@ PrintStudentsFile (void)
     fclose (FilePtr);
 }
 
-static int 
+static int
 GetInt (const char* Message)
 {
     char Line[80];
@@ -60,7 +60,7 @@ GetInt (const char* Message)
     return Value;
 }
 
-static void 
+static void
 GetString (const char* Message, char* Str)
 {
     char Line[80];
@@ -93,7 +93,7 @@ int main (int argc, char * argv[])
         int Choice = 0;
         int StudentNumber = 0;
         STUDENT Student = {0, "", 0};
-       
+
         if (WithMenu)
         {
             printf ("\n\nMENU\n"
