@@ -465,8 +465,8 @@ int main (int argc, char * argv[])
     //MY_RUN_TEST(test_ReadElementInvalidFile1);						//deze test wil nog niet patrick
     //MY_RUN_TEST(test_ReadElementInvalidFile2);						//deze test wil nog niet patrick
 
-    //MY_RUN_TEST(test_WriteElementParameters);						// validation nog niet gerunt
-    //MY_RUN_TEST(test_WriteElement);
+    MY_RUN_TEST(test_WriteElementParameters);
+    MY_RUN_TEST(test_WriteElement);
 
     MY_RUN_TEST(test_ComputeAverageParameters);
     MY_RUN_TEST(test_ComputeAverageInNonExistingFile);
@@ -479,19 +479,19 @@ int main (int argc, char * argv[])
     MY_RUN_TEST(test_LineairSearchParameters);
     MY_RUN_TEST(test_LineairSearchMatches);
     //MY_RUN_TEST(test_LineairSearchInBetweenValues);		// deze werkt nog niet.
-    MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);
+   // MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);
     //MY_RUN_TEST(test_LineairSearchValuesBeyondLast);
 
-    //MY_RUN_TEST(test_BinarySearchNonExistingFile);
-    //MY_RUN_TEST(test_BinarySearchParameters);
+    MY_RUN_TEST(test_BinarySearchNonExistingFile);
+    MY_RUN_TEST(test_BinarySearchParameters);
     //MY_RUN_TEST(test_BinarySearchMatches);
     //MY_RUN_TEST(test_BinarySearchInBetweenValues);
     //MY_RUN_TEST(test_BinarySearchValuesBeforeFirst);
     //MY_RUN_TEST(test_BinarySearchValuesBeyondLast);
 
-    //MY_RUN_TEST(test_AddStudentParameters);
+    MY_RUN_TEST(test_AddStudentParameters);
     MY_RUN_TEST(test_RemoveStudentParameters);
-    //MY_RUN_TEST(test_AddAndRemoveStudents);
+    MY_RUN_TEST(test_AddAndRemoveStudents);
 
     return UnityEnd();
 }
