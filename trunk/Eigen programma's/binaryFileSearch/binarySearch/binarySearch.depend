@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1411326890 source:c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\binaryfilesearch\binarysearch\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
