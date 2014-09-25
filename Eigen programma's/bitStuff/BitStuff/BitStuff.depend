@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1411595623 source:c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\bitstuff\bitstuff\main.c
+	<stdio.h>
+	<stdlib.h>
+
