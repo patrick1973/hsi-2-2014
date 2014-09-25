@@ -31,7 +31,6 @@ unsigned int CountOnes(unsigned int value)
  */
 {
     // TODO: implement
-    //methode 1
     int i=0;
     int oneCounter=0;
     unsigned int shift;
