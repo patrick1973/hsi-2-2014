@@ -25,6 +25,8 @@ int main(void)
     fread(buffer,8,sizeof(getallenReeks[0]) ,fp);
 	printf("resultaat is %s\n",buffer);
 	fclose(fp);
+	char p = 0;
+	printf("groote van een int is %d", sizeof(p));
 	return 0;
 }
 

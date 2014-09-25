@@ -46,7 +46,7 @@ int WriteElement(FILE* FilePtr, int ElementNr, const STUDENT* StudentPtr)
     int Result = 0;
 
     // TODO: implement
-	
+
 	if (FilePtr != NULL && StudentPtr != NULL)
 	{
             fseek(FilePtr,ElementNr*sizeof(STUDENT),SEEK_SET);
@@ -201,14 +201,13 @@ AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr)
 	if (fp != NULL && StudentPtr != NULL)       // indien het mogelijk is om de file te openen
 	{
 		fclose(fp);                             // sluit de file weer, liniair search heeft zijn eigen close
-		gevonden = -1; LinearSearchStudentsFile(FileName,StudentPtr->StudentNumber, &tijdelijkeStruct);
+		gevonden = LinearSearchStudentsFile(FileName,StudentPtr->StudentNumber, &tijdelijkeStruct);
 	}
 	else
 	{
 		Result =-1; // error
 	}
-
-	if (gevonden==-1)
+	if ((gevonden==-1) || (gevonden == 99))
 	{
 		fp = fopen(FileName, "ab");
 		if (fp != NULL && StudentPtr != NULL)
@@ -283,7 +282,6 @@ RemoveStudentFromFile (char* FileName, int StudentNumber)
 	{
 		Result = -1;
 	}
-
 	return Result;
 }
 

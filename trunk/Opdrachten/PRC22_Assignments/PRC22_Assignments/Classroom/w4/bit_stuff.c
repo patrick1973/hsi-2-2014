@@ -10,7 +10,19 @@ unsigned int MakeBitmask(unsigned int width, unsigned int shift)
  */
 {
     // TODO: implement
-    return 0x0;
+    unsigned int mask = 0xffffffff;                             //zet het masker op allemaal 1
+    unsigned int temp = 0;
+
+    if (width > 0 )                                             //als er geen bits gevraagd wordt hoe je ook niets te doen.
+    {
+        temp = mask >>( NR_BITS_IN_TYPE(unsigned int)-width);   //schuif naar rechts alle eenen - het gewenste aantal
+        return temp<< shift;                                    //verschuif het gevraagde aantal.
+    }
+    else
+    {
+        return 0;
+    }
+
 }
 
 unsigned int CountOnes(unsigned int value)
@@ -19,5 +31,17 @@ unsigned int CountOnes(unsigned int value)
  */
 {
     // TODO: implement
-    return 0;
+    //methode 1
+    int i=0;
+    int oneCounter=0;
+    unsigned int shift;
+    for (i=NR_BITS_IN_TYPE(unsigned int);i>0;i--)
+    {
+        shift =  value>> i;
+        if (shift &1)
+        {
+            oneCounter++;
+        }
+    }
+    return oneCounter;
 }
