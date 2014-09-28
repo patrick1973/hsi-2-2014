@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
+
+#include <errno.h>
+
 
 #include "file.h"
 #include "resource_detector.h"
@@ -92,6 +96,10 @@ int ComputeAverageStudyResults (char* FileName, double* Average)
 	{
 		Result = -1;
 	}
+	if (fp != NULL)
+	{
+		fclose(fp);
+	}
 	return Result;
 }
 
@@ -119,13 +127,16 @@ LinearSearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr)
 				return Result;
 			}
 			fread(StudentPtr,sizeof(STUDENT),1,fp);
-		} while(!feof(fp));
-		fclose(fp);
+		} while(!feof(fp) );
 	}
 	else
     {
         Result = -1; // error tijdens het openen
     }
+	if (fp != NULL)
+	{
+		fclose(fp);
+	}
 	return Result;
 }
 
@@ -137,56 +148,53 @@ BinarySearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr)
 	int first=0, last=0, middel;
 	bool succes = false;
 
-
-    // TODO: implement
+	// TODO: implement
 	FILE *fp = NULL;
 	fp = fopen(FileName, "rb" );
 	if (fp !=NULL && StudentPtr != NULL)
 	{
-		fseek(fp,0,SEEK_END);							// zet de file pointer naar het einde van de file
-		totalElements = ftell(fp)/sizeof(STUDENT);	    // bepaal hoeveel elementen (studenten) er in de file staan.
-		last = totalElements-1;	                    	// last bevat de positie van het laatste element. -1 omdat we beginen te tellen vanaf 0
-		middel = (last - first) / 2;					// dus bij oneven getallen naar beneden. 7- 0 / 2 = 3
-		rewind(fp);                                 	// filepointer terug naar het begin
-		while(first <= last && succes == false)
+		fseek(fp,0,SEEK_END);								// zet de file pointer naar het einde van de file
+		totalElements = ftell(fp)/sizeof(STUDENT);	// bepaal hoeveel elementen (studenten) er in de file staan.
+		last = totalElements;	               			     		// last bevat de positie van het laatste element.
+		middel = ((last - first) / 2);								// dus bij oneven getallen naar beneden. 7- 1 / 2 = 3
+		rewind(fp);                                 					// filepointer terug naar het begin
+		while(first <= last && succes==false)
 		{
-			fseek(fp, middel*sizeof(STUDENT),SEEK_SET); // zet de file pointer naar het middelste element.
-			fread(StudentPtr,sizeof(STUDENT),1,fp);     // deze functie hoogt de file pointer 1 op na het lezen. daar om moet in onderstaande regel -1 staan.
-			// for debug printf("actuele positie van de file pointer is %ld en daar staat studentnummer: %d nummer wat we zoeken is %d\n",(ftell(fp)/sizeof(STUDENT)-1),StudentPtr->StudentNumber, Number);
-			if ( Number < StudentPtr->StudentNumber)    // als het gezochte nummer kleiner is dan het gevonde midde nummer
+			fseek(fp, ((middel-1)*sizeof(STUDENT)),SEEK_SET); // zet de file pointer naar het middelste element.
+			fread(StudentPtr,sizeof(STUDENT),1,fp); 		  
+			//* for debug */  printf("actuele positie van de file pointer is %ld en daar staat studentnummer: %d nummer wat we zoeken is %d\n",(ftell(fp)/sizeof(STUDENT)),StudentPtr->StudentNumber, Number);
+			//* for debug */ printf("first : %d  last: %d  midde : %d\n",first,last,middel);
+			if (  StudentPtr->StudentNumber < Number )    		
 			{
-			   // for debug printf("Te zoeken nummer dit in het linkerdeel \n");
-				last = middel -1;                       // het huidige midden is algecontroleerd dus last wordt 1 lager
-				middel = (last - first) / 2;
-				// for debugprintf(" last = %d, first = %d het nieuwe midden is : %d\n",last,first,middel);
-				succes = false;
+				//*for debug */ printf("Rechter gedeelte\n");
+				first = middel + 1;	
 			}
-			else if (Number > StudentPtr->StudentNumber )
-            {
-              // for debug  printf("Te zoeken nummer dit in het rechter deel \n");
-				last = totalElements-1;
-				first = middel +1;
-				middel = ((last-first)/2)+(ftell(fp)/sizeof(STUDENT));
-				// for debug printf(" last = %d, first = %d het nieuwe midden is : %d\n",last,first,middel);
-				succes = false;
+			else if (StudentPtr->StudentNumber > Number)
+			{
+				//*for debug */ printf("Linker gedeelte\n");
+				last = middel - 1;
 			}
 			else
-            {
-              // for debug  printf("Gevonden\n");
+			{
+				//* for debug*/  printf("Gevonden\n");
 				succes = true;
 				Result = 0;
 			}
-			//getchar();  // tijdelijk voor de test "press enter"
+			middel = first + ((last - first) / 2);	
+			//*for debug */ getchar();  // tijdelijk voor de test "press enter"
 		}
 	}
 	else
-    {
-        Result = -1;
-    }
+	{
+		Result = -1;
+	}
 
-   // for debug printf("\n\nResultaat is : %d\n\n", Result);
-    fclose(fp);
-    return Result;
+	//*for debug */ printf("\n\nResultaat is : %d\n\n", Result);
+	if (fp != NULL)
+	{
+		fclose(fp);
+	}
+	return Result;
 }
 
 int
@@ -213,7 +221,7 @@ AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr)
 		if (fp != NULL && StudentPtr != NULL)
 		{
 			fwrite(StudentPtr,1,sizeof(STUDENT),fp);
-			fclose(fp);
+			//fclose(fp);
 			Result =1;
 		}
 		else
@@ -226,6 +234,11 @@ AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr)
 	else if (gevonden == 0)
 	{
 		Result = 0;
+		//fclose(fp);
+	}
+	if (fp != NULL)
+	{
+		fclose(fp);
 	}
 	return Result;
 }
@@ -235,45 +248,63 @@ int
 RemoveStudentFromFile (char* FileName, int StudentNumber)
 {
 	int Result = 0;
-
+	
 	// TODO: implement
-	//kijk welke nummers niet overeen komen en sla die op in een appart bestand.
-	//zo filter je dus het record dat je wilt verwijderen er uit.
-	//gooi het orginele bestand weg en hernoem het tijdelijke bestand naar het actuele bestand.
 	STUDENT student = {0, "", 0} ;
 	FILE *fp= NULL;				// actuele file
-	FILE *fpTemp = NULL;		// tijdelijke file
+	
+	STUDENT *DynamischeArray;
 
-	fp = fopen(FileName, "rb");
-	fpTemp = fopen("tijdelijke.dat" , "wb");
+	fp = fopen(FileName, "rb"); // open 1
 
-	if (fp != NULL && fpTemp != NULL)
+	// kijk hoeveel studenten er in de file zitten.		
+	fseek(fp,0,SEEK_END);														// laat de file pointer naar het einde van de file wijzen
+	int sizeFp = ftell(fp);															// sla de grootte op van de file
+	int aantalStudentInFpBefore = sizeFp / sizeof(STUDENT);	// reken het aanal studenten uit voor het verwijderen
+	rewind(fp);																		// zet de pointer terug naar het begin van de file
+	
+	// nu we het aantal studenten in een file weten kunnen we een dynamische array aan maken
+	// met calloc worde een array gemaakt en gevult met nullen. Gevaar van malloc is dat het geheugen gebied nog info bevat.
+	DynamischeArray = (STUDENT*)calloc(aantalStudentInFpBefore, (sizeof(STUDENT)));
+	
+	if (fp != NULL)
 	{
+		int remainingStudentCounter=0;
 		fread(&student,sizeof(STUDENT),1,fp);
 		while(!feof(fp))
 		{
-			if (student.StudentNumber != StudentNumber)
-			{
-				fwrite(&student,1,sizeof(STUDENT),fpTemp);
+			if (student.StudentNumber != StudentNumber && student.StudentNumber != 0)
+			{ 
+				DynamischeArray[remainingStudentCounter] = student;	
+				remainingStudentCounter++;
 			}
 			fread(&student,sizeof(STUDENT),1,fp);
 		}
-
-		int sizeFp = ftell(fp);
-		int sizeFpTemp = ftell(fpTemp);
-
-		fclose(fp);
-		fclose(fpTemp);
-
-		remove("students.dat");
-		rename("tijdelijke.dat","students.dat");
-		//remove("tijdelijke.dat");
-
-		if ( sizeFp == sizeFpTemp) // als de grote van beide bestanden gelijk zijn is er dus niets gewijzigd, waarschijnlijk onbekend nummer
+		
+		fclose(fp); //close 1
+		// nu de array gevuld is met de nieuwe gegevens en er zijn studenten verwijderd is de array dus kleine geworden.
+		// de array kan nu dus opnieuw worden ingesteld.
+		DynamischeArray = (STUDENT*)realloc(DynamischeArray,  (remainingStudentCounter*sizeof(STUDENT)));
+		
+		//!!!!!!!size of werkt niet met een calloc gecreeerde array!!!!!!!!
+		//aantalStudentInFpAfter = sizeof(DynamischeArray) / sizeof(DynamischeArray[0]);		// reken het aanal studenten uit
+		fp = fopen(FileName, "wb"); // open 2
+	
+		// schrijf de gegevens uit de dynamische array naar de file.
+		int k;
+		for(k=0; k<(remainingStudentCounter);k++)
+		{
+			fwrite(&DynamischeArray[k],sizeof(STUDENT),1,fp);
+		}
+		
+		fclose(fp); //close 2
+		
+		// indien de aantal elementen in de dynamische array gelijk zijn aan het aantal gevonden studenten in file, dan is er niets verwijderd
+		if ( remainingStudentCounter == aantalStudentInFpBefore) 
 		{
 			Result = -1;
 		}
-		else		// verschilt de grote wel dan is er een record verwijderd.
+		else		// verschilt ze wel dan is er een student verwijderd
 		{
 			Result = 0;
 		}
@@ -282,6 +313,15 @@ RemoveStudentFromFile (char* FileName, int StudentNumber)
 	{
 		Result = -1;
 	}
+	
+	// indien ik het dynamische gebied will leeg maken komt er een error dat het al leeg is
+	 // while ( DynamischeArray != NULL)
+	 // {
+			// free(DynamischeArray);
+	 // }
+	 //  printf ("Error free memory: %s\n",strerror(errno));
+
+	 
 	return Result;
 }
 

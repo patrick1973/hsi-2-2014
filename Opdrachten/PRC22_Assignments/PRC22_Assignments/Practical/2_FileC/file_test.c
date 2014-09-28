@@ -4,6 +4,7 @@
 #include "unity.h"
 #include "resource_detector.h"
 
+
 // I rather dislike keeping line numbers updated, so I made my own macro to ditch the line number
 #define MY_RUN_TEST(func) RUN_TEST(func, 0)
 
@@ -376,7 +377,6 @@ void test_RemoveStudentParameters(void)
 void test_AddAndRemoveStudents(void)
 {
     // add new students
-    printf("voeg nieuwe studenten toe\n");
     STUDENT Student = {20, "Finkers", 40};
     TEST_ASSERT_EQUAL(1, AddStudentSortedToFile(NEW_FILE, &Student));
     Student = FillStudentProperties(40, "Maassen", 60);
@@ -389,7 +389,6 @@ void test_AddAndRemoveStudents(void)
     TEST_ASSERT_EQUAL(1, AddStudentSortedToFile(NEW_FILE, &Student));
 
     // add them again
-    printf("voeg nieuwe studenten nog een keer toe\n");
     Student = FillStudentProperties(10, "New Weijers", 130);
     TEST_ASSERT_EQUAL(0, AddStudentSortedToFile(NEW_FILE, &Student));
     Student = FillStudentProperties(100, "New Goedemondt", 1120);
@@ -402,7 +401,6 @@ void test_AddAndRemoveStudents(void)
     TEST_ASSERT_EQUAL(0, AddStudentSortedToFile(NEW_FILE, &Student));
 
     // test if they are on the correct spot in the file
-    printf("test of ze op de juiste plaats staan\n");
     Student = FillStudentProperties(189362, "AnotherAwfulName", -3245);
     FILE* FilePtr = fopen(NEW_FILE, "rb");
 
@@ -424,7 +422,6 @@ void test_AddAndRemoveStudents(void)
     FilePtr = NULL;
 
     // remove some students
-    printf("verwijder een paar studenten\n");
     TEST_ASSERT_EQUAL(0, RemoveStudentFromFile(NEW_FILE, 20));
     TEST_ASSERT_EQUAL(-1, RemoveStudentFromFile(NEW_FILE, 19));
     TEST_ASSERT_EQUAL(-1, RemoveStudentFromFile(NEW_FILE, 21));
@@ -432,7 +429,6 @@ void test_AddAndRemoveStudents(void)
     TEST_ASSERT_EQUAL(0, RemoveStudentFromFile(NEW_FILE, 100));
 
     // read file to see if the remaining students are on the correct spot
-     printf("kijk of de overgebleven studenten nog op de juist plaats staan\n");
     Student = FillStudentProperties(189362, "AnotherAwfulName", -3245);
     FilePtr = fopen(NEW_FILE, "rb");
 
@@ -447,8 +443,8 @@ void test_AddAndRemoveStudents(void)
     fclose(FilePtr);
     FilePtr = NULL;
 
-    // and remove testfile
-    TEST_ASSERT_EQUAL(0, remove(NEW_FILE));
+     //and remove testfile
+    TEST_ASSERT_EQUAL(0, remove(NEW_FILE)); 
 }
 
 /*
@@ -484,19 +480,19 @@ int main (int argc, char * argv[])
     MY_RUN_TEST(test_LineairSearchParameters);
     MY_RUN_TEST(test_LineairSearchMatches);
     //MY_RUN_TEST(test_LineairSearchInBetweenValues);		// deze werkt nog niet.
-   // MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);
-    //MY_RUN_TEST(test_LineairSearchValuesBeyondLast);
+    //MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);		// deze werkt nog niet.
+    //MY_RUN_TEST(test_LineairSearchValuesBeyondLast);		// deze werkt nog niet.
 
     MY_RUN_TEST(test_BinarySearchNonExistingFile);
     MY_RUN_TEST(test_BinarySearchParameters);
-    //MY_RUN_TEST(test_BinarySearchMatches);
-    //MY_RUN_TEST(test_BinarySearchInBetweenValues);
-    //MY_RUN_TEST(test_BinarySearchValuesBeforeFirst);
-    //MY_RUN_TEST(test_BinarySearchValuesBeyondLast);
+    MY_RUN_TEST(test_BinarySearchMatches);						
+    //MY_RUN_TEST(test_BinarySearchInBetweenValues);			// deze werkt nog niet.
+    //MY_RUN_TEST(test_BinarySearchValuesBeforeFirst);			// deze werkt nog niet.
+    //MY_RUN_TEST(test_BinarySearchValuesBeyondLast);			// deze werkt nog niet.
 
     MY_RUN_TEST(test_AddStudentParameters);
     MY_RUN_TEST(test_RemoveStudentParameters);
-    MY_RUN_TEST(test_AddAndRemoveStudents);     // deze functie werkt bijna.
+    MY_RUN_TEST(test_AddAndRemoveStudents);   
 
     return UnityEnd();
 }

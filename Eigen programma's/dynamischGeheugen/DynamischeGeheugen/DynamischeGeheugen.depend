@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1411760152 source:c:\users\patrick.vanieperen\dropbox\fontys\opleiding hsi-2\huiswerk en opdrachten\eigen programma's\dynamischgeheugen\dynamischegeheugen\main.c
+	<stdio.h>
+	<stdlib.h>
+
