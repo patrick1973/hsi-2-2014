@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
-
 #include <errno.h>
 
 
@@ -20,23 +19,27 @@
 int ReadElement(FILE* FilePtr, int ElementNr, STUDENT* StudentPtr)
 {
 	int Result = 0;
-
+	STUDENT student = {0, "", 0}; 
+	
 	// TODO: implement
 	//controleer of de file pointers NULL is. zo ja dan retourneer -1;
 	if (FilePtr != NULL && StudentPtr != NULL)
 	{
-		//door loop het bestand. fseek berekend iedere keer de nieuwe posite vanaf start.
-
-		fseek(FilePtr,(ElementNr*sizeof(STUDENT)),SEEK_SET);
-		if (fread(StudentPtr,sizeof(STUDENT),1,FilePtr)!=0) // lees elke keer 1 record in. indien fread 0 retourneerd is er geen data meer.
-		{
-			Result = 1;
+		{	
+			rewind(FilePtr);
+			//door loop het bestand. fseek berekend iedere keer de nieuwe posite vanaf start.
+			fseek(FilePtr,(ElementNr*sizeof(STUDENT)),SEEK_SET);
+			if (fread(&student,sizeof(STUDENT),1,FilePtr)!=0) // lees elke keer 1 record in. indien fread 0 retourneerd is er geen data meer.
+			{
+				*StudentPtr = student; // update pointer pas als er iets gevonden is.
+				Result = 1;
+			}
+			else
+			{
+				Result = 0;
+			}
 		}
-		else
-		{
-			Result = 0;
-		}
-	}
+	}		
 	else
 	{
 		Result = -1;
@@ -55,7 +58,7 @@ int WriteElement(FILE* FilePtr, int ElementNr, const STUDENT* StudentPtr)
 	{
             fseek(FilePtr,ElementNr*sizeof(STUDENT),SEEK_SET);
             fwrite(StudentPtr,1,sizeof(STUDENT),FilePtr);
-            Result = 0; //
+            Result = 0; 
     }
 	else
 	{
@@ -107,27 +110,28 @@ int ComputeAverageStudyResults (char* FileName, double* Average)
 int
 LinearSearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr)
 {
-	int Result = 0;
-
+	int Result = -1;
+	STUDENT student = {0, "'", 0};
+	int nummer=0;
+	bool gevonden = false;
+	
 	// TODO: implement
+	
 	FILE *fp= NULL;
 	fp = fopen(FileName, "rb");
 	if (fp != NULL && StudentPtr != NULL)
 	{
-		do
+		while(( ReadElement(fp,nummer++,&student) ==1) && gevonden == false)
 		{
-			if (StudentPtr->StudentNumber != Number)
+			if(student.StudentNumber == Number) 
 			{
-				Result = -1; // niet gevonden
+				*StudentPtr = student;
+				gevonden = true;
+				Result = 0;
+				
 			}
-			else
-			{
-				Result = 0; // gevonden
-				fclose(fp);
-				return Result;
-			}
-			fread(StudentPtr,sizeof(STUDENT),1,fp);
-		} while(!feof(fp) );
+		}
+		
 	}
 	else
     {
@@ -147,49 +151,43 @@ BinarySearchStudentsFile (char* FileName, int Number, STUDENT* StudentPtr)
 	int totalElements =0;
 	int first=0, last=0, middel;
 	bool succes = false;
+	STUDENT student = { 0, "" , };
 
 	// TODO: implement
 	FILE *fp = NULL;
 	fp = fopen(FileName, "rb" );
 	if (fp !=NULL && StudentPtr != NULL)
 	{
-		fseek(fp,0,SEEK_END);								// zet de file pointer naar het einde van de file
-		totalElements = ftell(fp)/sizeof(STUDENT);	// bepaal hoeveel elementen (studenten) er in de file staan.
+		fseek(fp,0,SEEK_END);									// zet de file pointer naar het einde van de file
+		totalElements = ftell(fp)/sizeof(STUDENT);		// bepaal hoeveel elementen (studenten) er in de file staan.
 		last = totalElements;	               			     		// last bevat de positie van het laatste element.
 		middel = ((last - first) / 2);								// dus bij oneven getallen naar beneden. 7- 1 / 2 = 3
 		rewind(fp);                                 					// filepointer terug naar het begin
 		while(first <= last && succes==false)
 		{
 			fseek(fp, ((middel-1)*sizeof(STUDENT)),SEEK_SET); // zet de file pointer naar het middelste element.
-			fread(StudentPtr,sizeof(STUDENT),1,fp); 		  
-			//* for debug */  printf("actuele positie van de file pointer is %ld en daar staat studentnummer: %d nummer wat we zoeken is %d\n",(ftell(fp)/sizeof(STUDENT)),StudentPtr->StudentNumber, Number);
-			//* for debug */ printf("first : %d  last: %d  midde : %d\n",first,last,middel);
-			if (  StudentPtr->StudentNumber < Number )    		
+			fread(&student,sizeof(STUDENT),1,fp);		
+			
+			if (  student.StudentNumber < Number )    		
 			{
-				//*for debug */ printf("Rechter gedeelte\n");
 				first = middel + 1;	
 			}
-			else if (StudentPtr->StudentNumber > Number)
+			else if (student.StudentNumber > Number)
 			{
-				//*for debug */ printf("Linker gedeelte\n");
 				last = middel - 1;
 			}
 			else
 			{
 				//* for debug*/  printf("Gevonden\n");
-				succes = true;
+				*StudentPtr = student;
 				Result = 0;
+				succes = true;
 			}
 			middel = first + ((last - first) / 2);	
-			//*for debug */ getchar();  // tijdelijk voor de test "press enter"
+			
 		}
 	}
-	else
-	{
-		Result = -1;
-	}
-
-	//*for debug */ printf("\n\nResultaat is : %d\n\n", Result);
+	
 	if (fp != NULL)
 	{
 		fclose(fp);
@@ -202,13 +200,13 @@ AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr)
 {
 	int Result = 0;
 	// TODO: implement
-	STUDENT tijdelijkeStruct = {0, "", 0} ;     // maak een tijdelijk struct aan om te kunnen vergeljken
+	STUDENT tijdelijkeStruct = {0, "", 0} ;    	 // maak een tijdelijk struct aan om te kunnen vergeljken
 	int gevonden = 99;
 	FILE *fp=NULL;
-	fp = fopen(FileName, "rb");                 // open de file in read mode. Dit is alleen om te kijken of het lukt. want de liniar search retourneerd -1 bij error en niet gevonden
-	if (fp != NULL && StudentPtr != NULL)       // indien het mogelijk is om de file te openen
+	fp = fopen(FileName, "rb");                		 // open de file in read mode. Dit is alleen om te kijken of het lukt. want de liniar search retourneerd -1 bij error en niet gevonden
+	if (fp != NULL && StudentPtr != NULL)     // indien het mogelijk is om de file te openen
 	{
-		fclose(fp);                             // sluit de file weer, liniair search heeft zijn eigen close
+		fclose(fp);                             			// sluit de file weer, liniair search heeft zijn eigen close
 		gevonden = LinearSearchStudentsFile(FileName,StudentPtr->StudentNumber, &tijdelijkeStruct);
 	}
 	else
@@ -221,7 +219,6 @@ AddStudentSortedToFile (char* FileName, STUDENT* StudentPtr)
 		if (fp != NULL && StudentPtr != NULL)
 		{
 			fwrite(StudentPtr,1,sizeof(STUDENT),fp);
-			//fclose(fp);
 			Result =1;
 		}
 		else
@@ -296,7 +293,7 @@ RemoveStudentFromFile (char* FileName, int StudentNumber)
 		{
 			fwrite(&DynamischeArray[k],sizeof(STUDENT),1,fp);
 		}
-		
+		free(DynamischeArray);
 		fclose(fp); //close 2
 		
 		// indien de aantal elementen in de dynamische array gelijk zijn aan het aantal gevonden studenten in file, dan is er niets verwijderd
@@ -315,11 +312,9 @@ RemoveStudentFromFile (char* FileName, int StudentNumber)
 	}
 	
 	// indien ik het dynamische gebied will leeg maken komt er een error dat het al leeg is
-	 // while ( DynamischeArray != NULL)
-	 // {
-			// free(DynamischeArray);
-	 // }
-	 //  printf ("Error free memory: %s\n",strerror(errno));
+	//	free(DynamischeArray);
+
+	//printf ("Error free memory: %s\n",strerror(errno));
 
 	 
 	return Result;

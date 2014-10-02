@@ -109,6 +109,7 @@ void test_ReadElementInvalidFile1(void)
     TEST_ASSERT_NOT_NULL(FilePtr);
 
     TEST_ASSERT_EQUAL(0, ReadElement(FilePtr, 0, &Student));
+	
     StudentPropertiesValidation(19826, "Bladiebladiebla", 12345, &Student);
 
     fclose(FilePtr);
@@ -463,8 +464,8 @@ int main (int argc, char * argv[])
     MY_RUN_TEST(test_ReadElementParameters);
     MY_RUN_TEST(test_ReadElementEmptyFile);
     MY_RUN_TEST(test_ReadElementValidFile);
-    //MY_RUN_TEST(test_ReadElementInvalidFile1);						//deze test wil nog niet patrick
-    //MY_RUN_TEST(test_ReadElementInvalidFile2);						//deze test wil nog niet patrick
+    MY_RUN_TEST(test_ReadElementInvalidFile1);						
+    MY_RUN_TEST(test_ReadElementInvalidFile2);						
 
     MY_RUN_TEST(test_WriteElementParameters);
     MY_RUN_TEST(test_WriteElement);
@@ -479,16 +480,16 @@ int main (int argc, char * argv[])
     MY_RUN_TEST(test_LineairSearchNonExistingFile);
     MY_RUN_TEST(test_LineairSearchParameters);
     MY_RUN_TEST(test_LineairSearchMatches);
-    //MY_RUN_TEST(test_LineairSearchInBetweenValues);		// deze werkt nog niet.
-    //MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);		// deze werkt nog niet.
-    //MY_RUN_TEST(test_LineairSearchValuesBeyondLast);		// deze werkt nog niet.
+    MY_RUN_TEST(test_LineairSearchInBetweenValues);		
+    MY_RUN_TEST(test_LineairSearchValuesBeforeFirst);		
+    MY_RUN_TEST(test_LineairSearchValuesBeyondLast);		
 
     MY_RUN_TEST(test_BinarySearchNonExistingFile);
     MY_RUN_TEST(test_BinarySearchParameters);
     MY_RUN_TEST(test_BinarySearchMatches);						
-    //MY_RUN_TEST(test_BinarySearchInBetweenValues);			// deze werkt nog niet.
-    //MY_RUN_TEST(test_BinarySearchValuesBeforeFirst);			// deze werkt nog niet.
-    //MY_RUN_TEST(test_BinarySearchValuesBeyondLast);			// deze werkt nog niet.
+    MY_RUN_TEST(test_BinarySearchInBetweenValues);			
+    MY_RUN_TEST(test_BinarySearchValuesBeforeFirst);			
+    MY_RUN_TEST(test_BinarySearchValuesBeyondLast);			
 
     MY_RUN_TEST(test_AddStudentParameters);
     MY_RUN_TEST(test_RemoveStudentParameters);
